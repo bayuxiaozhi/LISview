@@ -1,0 +1,1512 @@
+
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>重庆新概念LIS仪器接口资料库</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --gray: #95a5a6;
+            --success: #27ae60;
+        }
+        
+        body {
+            display: flex;
+            height: 100vh;
+            background: linear-gradient(135deg, #1a2a3a, #2c3e50);
+            color: var(--light);
+            overflow: hidden;
+        }
+        
+        /* 左侧目录样式 */
+        .sidebar {
+            width: 280px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            z-index: 1000;
+        }
+        
+        .logo-section {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo i {
+            font-size: 28px;
+            color: var(--secondary);
+        }
+        
+        .logo h1 {
+            font-size: 22px;
+            font-weight: 700;
+            background: linear-gradient(to right, #3498db, #2ecc71);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .search-box {
+            position: relative;
+            margin: 10px 0 20px;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            border-radius: 50px;
+            border: none;
+            background: rgba(0, 0, 0, 0.2);
+            color: white;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        
+        .search-box input:focus {
+            background: rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 0 2px var(--secondary);
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+        
+        .directories {
+            overflow-y: auto;
+            padding: 0 15px;
+            flex-grow: 1;
+        }
+        
+        .directory-group {
+            margin-bottom: 25px;
+        }
+        
+        .directory-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .directory-title:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .directory-title i {
+            transition: transform 0.3s ease;
+        }
+        
+        .directory-title.active i {
+            transform: rotate(90deg);
+        }
+        
+        .directory-items {
+            padding-left: 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .directory-title.active + .directory-items {
+            max-height: 1000px;
+        }
+        
+        .directory-item {
+            padding: 10px 15px;
+            margin: 5px 0;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+        
+        .directory-item i {
+            margin-right: 10px;
+            color: var(--secondary);
+            font-size: 14px;
+        }
+        
+        .directory-item:hover {
+            background: rgba(52, 152, 219, 0.15);
+        }
+        
+        .directory-item.active {
+            background: rgba(52, 152, 219, 0.25);
+            font-weight: 600;
+        }
+        
+        /* 右侧内容样式 */
+        .content-area {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .content-header {
+            padding: 20px 30px;
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            font-size: 15px;
+        }
+        
+        .breadcrumb a {
+            color: var(--secondary);
+            text-decoration: none;
+        }
+        
+        .breadcrumb i {
+            margin: 0 10px;
+            font-size: 12px;
+            color: var(--gray);
+        }
+        
+        .actions button {
+            background: rgba(52, 152, 219, 0.2);
+            border: 1px solid rgba(52, 152, 219, 0.4);
+            color: var(--light);
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-left: 10px;
+        }
+        
+        .actions button:hover {
+            background: rgba(52, 152, 219, 0.3);
+        }
+        
+        .actions button i {
+            margin-right: 5px;
+        }
+        
+        .content {
+            flex-grow: 1;
+            padding: 30px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.1);
+        }
+        
+        .document {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 30px;
+            max-width: 900px;
+            margin: 0 auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .document-header {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .document-title {
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: var(--light);
+            display: flex;
+            align-items: center;
+        }
+        
+        .document-title i {
+            margin-right: 15px;
+            color: var(--secondary);
+        }
+        
+        .document-meta {
+            display: flex;
+            color: var(--gray);
+            font-size: 14px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .document-meta span {
+            display: flex;
+            align-items: center;
+        }
+        
+        .document-meta i {
+            margin-right: 6px;
+        }
+        
+        .document-body {
+            line-height: 1.8;
+        }
+        
+        .document-section {
+            margin-bottom: 30px;
+        }
+        
+        .document-section h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+        }
+        
+        .document-section h3 i {
+            margin-right: 10px;
+        }
+        
+        .document-section p {
+            margin-bottom: 15px;
+            color: rgba(255, 255, 255, 0.85);
+        }
+        
+        .file-list {
+            list-style: none;
+            margin: 20px 0;
+        }
+        
+        .file-list li {
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+        
+        .file-list li:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+        
+        .file-list i {
+            margin-right: 10px;
+            color: var(--secondary);
+        }
+        
+        /* 仪器图片区域 */
+        .instrument-images {
+            margin: 30px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .main-image {
+            width: 100%;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .main-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+        
+        .image-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 15px;
+            color: white;
+            font-size: 14px;
+        }
+        
+        .thumbnails {
+            display: flex;
+            padding: 15px;
+            gap: 10px;
+            overflow-x: auto;
+            background: rgba(0, 0, 0, 0.1);
+        }
+        
+        .thumbnail {
+            width: 80px;
+            height: 60px;
+            border-radius: 4px;
+            overflow: hidden;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        
+        .thumbnail:hover, .thumbnail.active {
+            opacity: 1;
+            transform: scale(1.05);
+            box-shadow: 0 0 0 2px var(--secondary);
+        }
+        
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* 下载中心样式 */
+        .downloads-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .download-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .download-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            border-color: rgba(52, 152, 219, 0.4);
+        }
+        
+        .download-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .download-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(52, 152, 219, 0.2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 24px;
+            color: var(--secondary);
+        }
+        
+        .download-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--light);
+        }
+        
+        .download-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 10px 0;
+            font-size: 14px;
+            color: var(--gray);
+        }
+        
+        .download-meta span {
+            display: flex;
+            align-items: center;
+        }
+        
+        .download-meta i {
+            margin-right: 5px;
+        }
+        
+        .download-description {
+            margin: 15px 0;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+        
+        .download-action {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+        }
+        
+        .download-btn {
+            background: var(--secondary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .download-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .download-btn i {
+            margin-right: 8px;
+        }
+        
+        .file-size {
+            font-size: 14px;
+            color: var(--gray);
+        }
+        
+        .toggle-sidebar {
+            display: none;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            z-index: 1001;
+            cursor: pointer;
+        }
+        
+        /* 侧边栏遮罩层 */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 992px) {
+            .sidebar {
+                position: fixed;
+                left: -280px;
+                z-index: 1000;
+                height: 100%;
+                transition: left 0.3s ease;
+            }
+            
+            .sidebar.active {
+                left: 0;
+            }
+            
+            .toggle-sidebar {
+                display: block;
+            }
+            
+            .content-header {
+                padding-left: 70px;
+            }
+            
+            .main-image {
+                height: 300px;
+            }
+            
+            .sidebar-overlay.active {
+                display: block;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-image {
+                height: 250px;
+            }
+            
+            .document {
+                padding: 20px;
+            }
+            
+            .downloads-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .content {
+                padding: 20px 15px 60px 10px;
+            }
+            
+            .document {
+                padding: 15px;
+ 	margin-bottom: 20px;
+            }
+            
+            .document-title {
+                font-size: 24px;
+            }
+            
+            .actions button span {
+                display: none;
+            }
+            
+            .actions button i {
+                margin-right: 0;
+            }
+            
+            .main-image {
+                height: 200px;
+            }
+            
+            .thumbnail {
+                width: 60px;
+                height: 45px;
+            }
+            
+            .download-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .download-icon {
+                margin-bottom: 10px;
+            }
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.4s ease forwards;
+        }
+        
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .spec-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 15px;
+            transition: transform 0.3s ease;
+        }
+        
+        .spec-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+        
+        .spec-card h4 {
+            color: var(--secondary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .spec-card h4 i {
+            margin-right: 8px;
+        }
+        
+        .spec-card ul {
+            padding-left: 10px;
+        }
+        
+        .spec-card li {
+            margin-bottom: 8px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* 图片模态框样式 */
+        .image-modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            padding-top: 50px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.9);
+            text-align: center;
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 90%;
+            max-height: 80vh;
+            animation: zoom 0.3s;
+        }
+
+        @keyframes zoom {
+            from {transform: scale(0.1);}
+            to {transform: scale(1);}
+        }
+
+        .modal-caption {
+            margin: 15px auto;
+            display: block;
+            width: 80%;
+            max-width: 700px;
+            text-align: center;
+            color: #ccc;
+            font-size: 16px;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .close-modal:hover,
+        .close-modal:focus {
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* 添加双击提示 */
+        .main-image::after {
+            content: "双击放大图片";
+            position: absolute;
+            bottom: 40px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            background-color: rgba(0, 0, 0, 0.4);
+            padding: 4px 8px;
+            border-radius: 4px;
+            text-shadow: 
+            0 0 6px rgba(0, 0, 0, 0.9), 
+            0 0 3px rgba(0, 0, 0, 1),
+            0 1px 1px rgba(0, 0, 0, 1);
+            text-stroke: 0.5px rgba(0, 0, 0, 0.7);
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .main-image:hover::after {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <button class="toggle-sidebar">
+        <i class="fas fa-bars"></i>
+    </button>
+    
+    <!-- 侧边栏遮罩层 -->
+    <div class="sidebar-overlay"></div>
+    
+    <aside class="sidebar">
+        <div class="logo-section">
+            <div class="logo">
+                <i class="fas fa-microscope"></i>
+                <h1>LIS仪器接口资料库</h1>
+            </div>
+            
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="搜索仪器资料..." id="searchInput">
+            </div>
+        </div>
+        
+        <div class="directories">
+            <div class="directory-group">
+                <div class="directory-title active">
+                    <span><i class="fas fa-flask"></i> 生化分析仪</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div class="directory-items">
+                    <div class="directory-item active" data-file="analyzer-a2000">
+                        <i class="fas fa-file-medical"></i> A2000全自动生化分析仪
+                    </div>
+                    <div class="directory-item" data-file="analyzer-b500">
+                        <i class="fas fa-file-medical"></i> B500急诊生化分析仪
+                    </div>
+                    <div class="directory-item" data-file="analyzer-c800">
+                        <i class="fas fa-file-medical"></i> C800模块化生化系统
+                    </div>
+                </div>
+            </div>
+            
+            <div class="directory-group">
+                <div class="directory-title">
+                    <span><i class="fas fa-tint"></i> 血液分析仪</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div class="directory-items">
+                    <div class="directory-item" data-file="DH71">
+                        <i class="fas fa-file-medical"></i> DH71CRP五分类血球仪
+                    </div>
+                    <div class="directory-item" data-file="hematology-x1">
+                        <i class="fas fa-file-medical"></i> X1五分类血球仪
+                    </div>
+                    <div class="directory-item" data-file="hematology-x3">
+                        <i class="fas fa-file-medical"></i> X3全自动血凝仪
+                    </div>
+                </div>
+            </div>
+            
+            <div class="directory-group">
+                <div class="directory-title">
+                    <span><i class="fas fa-dna"></i> 免疫分析仪</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div class="directory-items">
+                    <div class="directory-item" data-file="immuno-e100">
+                        <i class="fas fa-file-medical"></i> E100化学发光仪
+                    </div>
+                    <div class="directory-item" data-file="immuno-e200">
+                        <i class="fas fa-file-medical"></i> E200全自动免疫分析仪
+                    </div>
+                </div>
+            </div>
+            
+            <div class="directory-group">
+                <div class="directory-title">
+                    <span><i class="fas fa-bacterium"></i> 微生物仪</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div class="directory-items">
+                    <div class="directory-item" data-file="BT120">
+                        <i class="fas fa-file-medical"></i>全自动血培养系统 BT120
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 下载中心目录 -->
+            <div class="directory-group">
+                <div class="directory-title">
+                    <span><i class="fas fa-download"></i> 下载中心</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div class="directory-items">
+                    <div class="directory-item" data-file="download-drivers">
+                        <i class="fas fa-file-archive"></i> 接口/驱动程序
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aside>
+    
+    <main class="content-area">
+        <div class="content-header">
+            <div class="breadcrumb">
+                <a href="#">首页</a>
+                <i class="fas fa-chevron-right"></i>
+                <a href="#">生化分析仪</a>
+                <i class="fas fa-chevron-right"></i>
+                <span>A2000全自动生化分析仪</span>
+            </div>
+            
+            <div class="actions">
+                <button><i class="fas fa-download"></i> <span>导出PDF</span></button>
+                <button><i class="fas fa-print"></i> <span>打印</span></button>
+                <button><i class="fas fa-bookmark"></i> <span>收藏</span></button>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="document fade-in">
+                <!-- 内容将由JavaScript动态生成 -->
+            </div>
+        </div>
+    </main>
+
+    <!-- 图片放大模态框 -->
+    <div class="image-modal" id="imageModal">
+        <span class="close-modal">&times;</span>
+        <img class="modal-content" id="modalImage">
+        <div class="modal-caption" id="modalCaption"></div>
+    </div>
+
+    <script>
+        // 仪器资料数据库
+        const instrumentData = {
+            "analyzer-a2000": {
+                title: "A2000全自动生化分析仪",
+                category: "生化分析仪",
+                author: "陈科志",
+                corp: "郑州安图生物科技有限公司",
+                update: "2025-8-19",
+                description: "A2000是一款高速、高精度的全自动生化分析仪，适用于大中型医院检验科。每小时可处理2000个测试，支持多种检测项目。",
+                
+                images: [
+                    { src: "https://pics.ustc.edu.cn/upload/tinstrument/1662022014ckscb.jpg",
+                      alt: "A2000仪器", 
+                      desc: "正面视图" },
+                    { src: "https://i1.hdslb.com/bfs/archive/2d4cbc5eb8a53fae64d72fb9b16334a33947e313.jpg", 
+                      alt: "A2000", 
+                      desc: "仪器通信设置界面" },
+                    { src: "https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", 
+                      alt: "A2000", 
+                      desc: "HIS接口参数配置" },
+                    { src: "A2000/A2000.png", 
+                      alt: "传输示例", 
+                      desc: "传输示例" }
+                ],
+                
+                sections: [
+                    {
+                        title: "通信参数",
+                        icon: "fas fa-cogs",
+                        content: `
+                            <div class="specs-grid">
+                                <div class="spec-card">
+                                    <h4><i class="fas fa-comments"></i>通信方式</h4>
+                                    <ul>
+                                        <li>网口通信</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="spec-card">
+                                    <h4><i class="fas fa-sliders-h"></i>协议参数</h4>
+                                    <ul>
+                                        <li>HL7协议</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="spec-card">
+                                    <h4><i class="fas fa-plug"></i>端口分配</h4>
+                                    <ul>
+                                        <li>LIS系统作为客户端，连接仪器端口5500（仪器作为TCP服务器）</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="spec-card">
+                                    <h4><i class="fas fa-id-badge"></i>接口名称</h4>
+                                    <ul>
+                                        <li>ZLCQ.clsLISDev_AutoLumo_A2000</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        `
+                    },
+                    {
+                        title: "操作流程",
+                        icon: "fas fa-list-ol",
+                        content: `
+                            <p>略</p>
+                        `
+                    } 
+                ]
+            },
+            "DH71": {
+                title: "DH71CRP 五分类+CRP全自动血液细胞分析仪",
+                category: "血液分析仪",
+                author: "陈科志",
+                corp: "深圳市帝迈生物技术有限公司",
+                update: "2025-8-19",
+                description: "帝迈全自动血细胞分析仪DH71CRP是一款集血常规五分类与CRP（C反应蛋白）联合检测于一体的国产高端设备，支持全自动进样，检测速度达90样本/小时，仅需≤20μL微量血液样本，并内置CRP试剂冷藏系统及智能堵孔清除功能。",
+                
+                images: [
+                    { src: "DH71/xq-DH71CRP.png", 
+                      alt: "DH71", 
+                      desc: "正面视图" },
+                    { src: "DH71/通信设置.png", 
+                      alt: "DH71", 
+                      desc: "通信设置界面" },
+                    { src: "DH71/HIS接口参数配置.png", 
+                      alt: "DH71", 
+                      desc: "HIS接口参数配置" },
+                    { src: "DH71/传输示例.png", 
+                      alt: "DH71", 
+                      desc: "传输示例" }
+                ],
+                
+                sections: [
+                    {
+                        title: "通信参数",
+                        icon: "fas fa-cogs",
+                        content: `
+                            <div class="specs-grid">
+                                <div class="spec-card">
+                                    <h4><i class="fas fa-comments"></i>通信方式</h4>
+                                    <ul>
+                                        <li>网口通信</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="spec-card">
+                                    <h4><i class="fas fa-sliders-h"></i>协议参数</h4>
+                                    <ul>
+                                        <li>HL7协议</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="spec-card">
+                                    <h4><i class="fas fa-plug"></i>端口分配</h4>
+                                    <ul>
+                                        <li>LIS系统作为主机，连接仪器端口5600（仪器作为TCP客户端）</li>
+                                    </ul>
+                                </div>
+                                <div class="spec-card">
+                                    <h4><i class="fas fa-id-badge"></i>接口名称</h4>
+                                    <ul>
+                                        <li>ZLCQ.clsLisDev_D7CRP</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        `
+                    },
+                    {
+                        title: "操作流程",
+                        icon: "fas fa-list-ol",
+                        content: `
+                            <p>略</p>
+                        `
+                    } 
+                ]
+            },
+            "analyzer-b500": {
+                title: "B500急诊生化分析仪",
+                category: "生化分析仪",
+                author: "李技术员",
+                update: "2023-10-20",
+                description: "B500是一款专为急诊检验设计的紧凑型生化分析仪，具有快速、灵活的特点，适合急诊科和小型实验室使用。",
+                
+                images: [
+                    { src: "https://pics.ustc.edu.cn/upload/tinstrument/1662022014ckscb.jpg", 
+                      alt: "A2000仪器", 
+                      desc: "正面视图" },
+                    { src: "https://i1.hdslb.com/bfs/archive/2d4cbc5eb8a53fae64d72fb9b16334a33947e313.jpg", 
+                      alt: "A2000操作界面", 
+                      desc: "通信设置界面" },
+                    { src: "https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", 
+                      alt: "A2000样本处理模块", 
+                      desc: "高效样本处理模块" }
+                ],
+                
+                sections: [
+                    {
+                        title: "通信参数",
+                        icon: "fas fa-cogs",
+                        content: `
+                            <div class="specs-grid">
+                                <div class="spec-card">
+                                    <h4><i class="fas fa-comments"></i>通信方式</h4>
+                                    <ul>
+                                        <li>网口通信</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="spec-card">
+                                    <h4><i class="fas fa-sliders-h"></i>协议参数</h4>
+                                    <ul>
+                                        <li>HL7协议</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="spec-card">
+                                    <h4><i class="fas fa-plug"></i>端口分配</h4>
+                                    <ul>
+                                        <li>LIS系统作为客户端，连接仪器端口5500（仪器作为TCP服务器）</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        `
+                    },
+                    {
+                        title: "操作流程",
+                        icon: "fas fa-list-ol",
+                        content: `
+                            <p>略</p>
+                        `
+                    } 
+                ]
+            },
+            "BT120": {
+                title: "珠海迪尔 全自动血培养系统 BT120",
+                category: "微生物仪",
+                author: "陈科志",
+                corp: "珠海迪尔",
+                update: "2025-10-20",
+                description: "一款在国内临床微生物实验室中较为常见的设备，主要用于快速检测血液及其他无菌体液中的病原微生物（包括细菌和真菌）。",
+                
+                images: [
+                    { src: "BT120/正面.jpg", 
+                      alt: "BT120", 
+                      desc: "正面视图" },
+                    { src: "BT120/mysql数据库配置.png", 
+                      alt: "BT120", 
+                      desc: "MySQL连接信息" },
+                    { src: "BT120/驱动.png", 
+                      alt: "BT120", 
+                      desc: "驱动信息" },
+                    { src: "BT120/ini配置文件.png", 
+                      alt: "BT120", 
+                      desc: "配置文件" }
+                ],
+                
+                sections: [
+                    {
+                        title: "通信参数",
+                        icon: "fas fa-cogs",
+                        content: `
+                            <div class="specs-grid">
+                                <div class="spec-card">
+                                    <h4><i class="fas fa-comments"></i>通信方式</h4>
+                                    <ul>
+                                        <li>MySQL数据库读取</li>
+                                    </ul>
+                                </div>
+                                <div class="spec-card">
+                                    <h4><i class="fas fa-id-badge"></i>接口名称</h4>
+                                    <ul>
+                                        <li>ZLCQ.clsLISdev_File_BT120</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        `
+                    },
+                    {
+                        title: "操作流程",
+                        icon: "fas fa-list-ol",
+                        content: `
+                            <p>1、需要安装 mysql-connector-odbc-5.3.4-win32驱动</p>
+                            <p>2、安装完后在system32/odbcad32.exe打开，找到驱动页，我这里以{MySQL ODBC 5.3 ANSI Driver}这个为例记住</p>
+                            <p>3、注册ZLCQ.DLL，配置HIS通信程序，启动接口后会在appsoft里面创建bt120.ini文件，核对里面的参数无误后即可，注意可能版本不同，对应的驱动可能有点不一样，需要根据2的实际情况修改{MySQL ODBC 5.3 ANSI Driver} </p>
+                        `
+                    } 
+                ]
+            },
+            
+            // 下载中心数据
+            "download-drivers": {
+                type: "download",
+                title: "接口/驱动程序下载",
+                category: "下载中心",
+                description: "提供所有仪器的接口程序、驱动程序下载，包含最新版本和兼容性说明",
+                
+                downloads: [
+                    {
+                        title: "ZLCQ接口程序",
+                        icon: "fas fa-microchip",
+                        description: "中联实验室管理系统DLL版本最新接口程序，版本2.1.5，支持Windows XP/7/10/11操作系统",
+                        file: "ZLCQ.zip",
+                        size: "2.27 MB",
+                        date: "2025-10-20",
+                        version: "2.1.5",
+                        downloads: 2
+                    },
+                    {
+                        title: "VB连接SQLite驱动",
+                        icon: "fas fa-cogs",
+                        description: "用于在 Windows 系统上安装 SQLite ODBC 驱动程序的安装程序。有了这个驱动，你的电脑就能通过标准的 ODBC 接口来访问和操作 SQLite 数据库文件。",
+                        file: "sqliteodbc.zip",
+                        size: "2.67 MB",
+                        date: "2025-10-10",
+                        version: "-",
+                        downloads: 1
+                    },
+                    {
+                        title: "VB连接MySQL驱动",
+                        icon: "fas fa-cogs",
+                        description: "用于在 Windows 系统上安装 MySQL ODBC 驱动程序的安装程序。有了这个驱动，你的电脑就能通过标准的 ODBC 接口来访问和操作 MySQL  数据库文件。",
+                        file: "3_mysql-connector-odbc-5.3.4-win32.zip",
+                        size: "6.75 MB",
+                        date: "2025-10-10",
+                        version: "5.3.4",
+                        downloads: 1
+                    }
+                ]
+            }
+        };
+
+        // DOM元素
+        const sidebar = document.querySelector('.sidebar');
+        const toggleBtn = document.querySelector('.toggle-sidebar');
+        const sidebarOverlay = document.querySelector('.sidebar-overlay');
+        const contentArea = document.querySelector('.content-area');
+
+        // 目录展开/折叠功能
+        document.querySelectorAll('.directory-title').forEach(title => {
+            title.addEventListener('click', () => {
+                title.classList.toggle('active');
+            });
+        });
+        
+        // 文件选择功能
+        document.querySelectorAll('.directory-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // 移除所有活动状态
+                document.querySelectorAll('.directory-item').forEach(el => {
+                    el.classList.remove('active');
+                });
+                
+                // 添加当前活动状态
+                this.classList.add('active');
+                
+                // 获取文件ID
+                const fileId = this.getAttribute('data-file');
+                
+                // 更新内容显示
+                updateContent(fileId);
+                
+                // 更新面包屑导航
+                const category = this.closest('.directory-group').querySelector('.directory-title span').textContent.trim();
+                const fileName = this.textContent.trim();
+                
+                document.querySelector('.breadcrumb').innerHTML = `
+                    <a href="#">首页</a>
+                    <i class="fas fa-chevron-right"></i>
+                    <a href="#">${category}</a>
+                    <i class="fas fa-chevron-right"></i>
+                    <span>${fileName}</span>
+                `;
+                
+                // 移动端：点击目录项后自动关闭侧边栏
+                if (window.innerWidth <= 992) {
+                    closeSidebar();
+                }
+            });
+        });
+
+        // 图片双击放大功能
+        function setupImageZoom() {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            const captionText = document.getElementById('modalCaption');
+            const closeModal = document.querySelector('.close-modal');
+            
+            // 双击主图片显示模态框
+            const mainImages = document.querySelectorAll('.main-image img');
+            mainImages.forEach(img => {
+                img.addEventListener('dblclick', function() {
+                    modal.style.display = 'block';
+                    modalImg.src = this.src;
+                    captionText.innerHTML = this.alt;
+                });
+            });
+            
+            // 双击缩略图显示模态框
+            const thumbnails = document.querySelectorAll('.thumbnail img');
+            thumbnails.forEach(img => {
+                img.addEventListener('dblclick', function() {
+                    modal.style.display = 'block';
+                    modalImg.src = this.src;
+                    captionText.innerHTML = this.alt;
+                });
+            });
+            
+            // 关闭按钮点击事件
+            closeModal.addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+            
+            // 点击模态框背景关闭
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+            
+            // ESC键关闭模态框
+            document.addEventListener('keydown', function(e) {
+                if (e.key === "Escape" && modal.style.display === "block") {
+                    modal.style.display = "none";
+                }
+            });
+        }
+
+        // 更新内容显示
+        function updateContent(fileId) {
+            const data = instrumentData[fileId];
+            const documentContainer = document.querySelector('.document');
+            
+            if (!data) {
+                documentContainer.innerHTML = `<div class="document-header">
+                    <h1 class="document-title"><i class="fas fa-exclamation-triangle"></i> 资料未找到</h1>
+                    <p>请求的资料不存在或尚未录入系统</p>
+                </div>`;
+                return;
+            }
+
+            // 下载中心内容
+            if (data.type === "download") {
+                let downloadsHTML = '';
+                
+                if (data.downloads && data.downloads.length > 0) {
+                    downloadsHTML = `<div class="downloads-container">`;
+                    
+                    data.downloads.forEach(download => {
+                        downloadsHTML += `
+                        <div class="download-card">
+                            <div class="download-header">
+                                <div class="download-icon">
+                                    <i class="${download.icon}"></i>
+                                </div>
+                                <div class="download-title">${download.title}</div>
+                            </div>
+                            
+                            <div class="download-meta">
+                                <span><i class="fas fa-calendar"></i> ${download.date}</span>
+                                <span><i class="fas fa-code-branch"></i> ${download.version}</span>
+                                <span><i class="fas fa-download"></i> ${download.downloads}次下载</span>
+                            </div>
+                            
+                            <div class="download-description">
+                                ${download.description}
+                            </div>
+                            
+                            <div class="download-action">
+                                <div class="file-size">
+                                    <i class="fas fa-hdd"></i> ${download.size}
+                                </div>
+                                <a href="${download.file}" download class="download-btn">
+                                    <i class="fas fa-download"></i> 下载文件
+                                </a>
+                            </div>
+                        </div>`;
+                    });
+                    
+                    downloadsHTML += `</div>`;
+                }
+                
+                documentContainer.innerHTML = `
+                    <div class="document-header">
+                        <h1 class="document-title"><i class="fas fa-download"></i> ${data.title}</h1>
+                        <div class="document-meta">
+                            <span><i class="fas fa-tag"></i> 分类: ${data.category}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="document-body">
+                        <div class="document-section">
+                            <h3><i class="fas fa-info-circle"></i> 下载说明</h3>
+                            <p>${data.description}</p>
+                            <p>所有文件均为ZIP压缩格式，下载后请解压使用。如有任何问题，请联系ckz@zlsoft.com。</p>
+                        </div>
+                        
+                        <div class="document-section">
+                            <h3><i class="fas fa-file-archive"></i> 可用下载</h3>
+                            ${downloadsHTML}
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
+            // 仪器资料内容
+            // 构建图片HTML
+            let imagesHTML = '';
+            if (data.images && data.images.length > 0) {
+                imagesHTML = `<div class="instrument-images">
+                    <div class="main-image">
+                        <img src="${data.images[0].src}" alt="${data.images[0].alt}" id="mainImage">
+                        <div class="image-info">${data.images[0].desc}</div>
+                    </div>
+                    <div class="thumbnails" id="thumbnails">`;
+                
+                data.images.forEach((img, index) => {
+                    imagesHTML += `<div class="thumbnail ${index === 0 ? 'active' : ''}" 
+                                      data-src="${img.src}" 
+                                      data-alt="${img.alt}" 
+                                      data-desc="${img.desc}">
+                        <img src="${img.src}" alt="${img.alt}">
+                    </div>`;
+                });
+                
+                imagesHTML += `</div></div>`;
+            }
+            
+            // 构建内容部分HTML
+            let sectionsHTML = '';
+            data.sections.forEach(section => {
+                sectionsHTML += `<div class="document-section">
+                    <h3><i class="${section.icon}"></i> ${section.title}</h3>
+                    ${section.content}
+                </div>`;
+            });
+            
+            // 组合完整文档
+            documentContainer.innerHTML = `
+                <div class="document-header">
+                    <h1 class="document-title"><i class="fas fa-file-medical"></i> ${data.title}</h1>
+                    <div class="document-meta">
+                        <span><i class="fas fa-user"></i> 作者: ${data.author}</span>
+                        <span><i class="fas fa-calendar"></i> 更新: ${data.update}</span>
+                        <span><i class="fas fa-tag"></i> 分类: ${data.category}</span>
+                        <span><i class="fas fa-home"></i> 厂商: ${data.corp}</span>
+                    </div>
+                </div>
+                
+                <div class="document-body">
+                    <div class="document-section">
+                        <h3><i class="fas fa-info-circle"></i> 仪器简介</h3>
+                        <p>${data.description}</p>
+                    </div>
+                    
+                    ${imagesHTML}
+                    
+                    ${sectionsHTML}
+                </div>
+            `;
+            
+            // 添加图片切换功能
+            setupImageGallery();
+            
+            // 添加动画效果
+            documentContainer.classList.remove('fade-in');
+            void documentContainer.offsetWidth; // 触发重排
+            documentContainer.classList.add('fade-in');
+            
+            // 在初始化时调用图片放大功能
+            setupImageZoom();
+        }
+        
+        // 设置图片库功能
+        function setupImageGallery() {
+            const thumbnails = document.querySelectorAll('.thumbnail');
+            const mainImage = document.getElementById('mainImage');
+            const imageInfo = document.querySelector('.image-info');
+            
+            if (!thumbnails.length) return;
+            
+            thumbnails.forEach(thumb => {
+                thumb.addEventListener('click', function() {
+                    // 更新主图
+                    const src = this.getAttribute('data-src');
+                    const alt = this.getAttribute('data-alt');
+                    const desc = this.getAttribute('data-desc');
+                    
+                    mainImage.src = src;
+                    mainImage.alt = alt;
+                    imageInfo.textContent = desc;
+                    
+                    // 更新缩略图活动状态
+                    thumbnails.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        }
+
+        // 搜索功能
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            
+            if (!searchTerm) {
+                // 显示所有目录项
+                document.querySelectorAll('.directory-item').forEach(item => {
+                    item.style.display = 'flex';
+                });
+                return;
+            }
+            
+            document.querySelectorAll('.directory-item').forEach(item => {
+                const text = item.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    item.style.display = 'flex';
+                    
+                    // 展开父目录
+                    const group = item.closest('.directory-group');
+                    group.querySelector('.directory-title').classList.add('active');
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+        
+        // 侧边栏功能
+        function toggleSidebar() {
+            sidebar.classList.toggle('active');
+            sidebarOverlay.classList.toggle('active');
+        }
+        
+        function closeSidebar() {
+            sidebar.classList.remove('active');
+            sidebarOverlay.classList.remove('active');
+        }
+        
+        // 移动端侧边栏切换
+        toggleBtn.addEventListener('click', toggleSidebar);
+        
+        // 点击遮罩层关闭侧边栏
+        sidebarOverlay.addEventListener('click', closeSidebar);
+        
+        // 点击内容区域关闭侧边栏（移动端）
+        contentArea.addEventListener('click', function() {
+            if (window.innerWidth <= 992 && sidebar.classList.contains('active')) {
+                closeSidebar();
+            }
+        });
+        
+        // 窗口大小改变时重置侧边栏状态
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 992) {
+                sidebar.classList.remove('active');
+                sidebarOverlay.classList.remove('active');
+            }
+        });
+        
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', () => {
+            // 默认显示第一个仪器资料
+            const firstItem = document.querySelector('.directory-item.active');
+            if (firstItem) {
+                const fileId = firstItem.getAttribute('data-file');
+                updateContent(fileId);
+            }
+        });
+    </script>
+</body>
+</html>
