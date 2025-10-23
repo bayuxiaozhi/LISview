@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -135,17 +135,36 @@
             transform: rotate(90deg);
         }
         
-        .directory-items {
-            padding-left: 20px;
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-        }
+     .directory-items {
+    padding-left: 20px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    /* 新增：为展开的目录项添加滚动 */
+    overflow-y: auto;
+}
         
-        .directory-title.active + .directory-items {
-            max-height: 1000px;
-        }
-        
+.directory-title.active + .directory-items {
+    max-height: 400px; /* 设置一个合适的最大高度 */
+}
+ /* 为目录项添加滚动条样式 */
+.directory-items::-webkit-scrollbar {
+    width: 4px;
+}
+
+.directory-items::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 2px;
+}
+
+.directory-items::-webkit-scrollbar-thumb {
+    background: rgba(52, 152, 219, 0.5);
+    border-radius: 2px;
+}
+
+.directory-items::-webkit-scrollbar-thumb:hover {
+    background: rgba(52, 152, 219, 0.7);
+}       
         .directory-item {
             padding: 10px 15px;
             margin: 5px 0;
@@ -578,7 +597,17 @@
             .content {
                 padding: 20px 15px 60px 10px;
             }
-            
+   @media (max-width: 992px) {
+    .directory-title.active + .directory-items {
+        max-height: 250px; /* 移动端使用较小的高度 */
+    }
+}
+
+@media (max-width: 576px) {
+    .directory-title.active + .directory-items {
+        max-height: 200px; /* 小屏幕使用更小的高度 */
+    }
+}         
             .document {
                 padding: 15px;
  	margin-bottom: 20px;
@@ -758,7 +787,7 @@
     <aside class="sidebar">
         <div class="logo-section">
             <div class="logo">
-                <i class="fas fa-microscope"></i>
+                <i class="fas fa-flask"></i>
                 <h1>LIS仪器接口资料库</h1>
             </div>
             
@@ -774,35 +803,137 @@
                     <span><i class="fas fa-flask"></i> 生化分析仪</span>
                     <i class="fas fa-chevron-right"></i>
                 </div>
-                <div class="directory-items">
-                    <div class="directory-item active" data-file="analyzer-a2000">
-                        <i class="fas fa-file-medical"></i> A2000全自动生化分析仪
-                    </div>
-                    <div class="directory-item" data-file="analyzer-b500">
-                        <i class="fas fa-file-medical"></i> B500急诊生化分析仪
-                    </div>
-                    <div class="directory-item" data-file="analyzer-c800">
-                        <i class="fas fa-file-medical"></i> C800模块化生化系统
-                    </div>
-                </div>
-            </div>
+               <div class="directory-items">
+    <div class="directory-item active" data-file="analyzer-a2000">
+        <i class="fas fa-file-medical"></i> A2000全自动生化分析仪
+    </div>
+    <div class="directory-item" data-file="analyzer-b500">
+        <i class="fas fa-file-medical"></i> B500急诊生化分析仪
+    </div>
+    <div class="directory-item" data-file="analyzer-c800">
+        <i class="fas fa-file-medical"></i> C800模块化生化系统
+    </div>
+    <div class="directory-item" data-file="analyzer-d1000">
+        <i class="fas fa-file-medical"></i> D1000高速生化仪
+    </div>
+    <div class="directory-item" data-file="analyzer-e600">
+        <i class="fas fa-file-medical"></i> E600全自动生化分析仪
+    </div>
+    <div class="directory-item" data-file="analyzer-f200">
+        <i class="fas fa-file-medical"></i> F200便携式生化仪
+    </div>
+    <div class="directory-item" data-file="analyzer-g300">
+        <i class="fas fa-file-medical"></i> G300模块化生化系统
+    </div>
+    <div class="directory-item" data-file="analyzer-h700">
+        <i class="fas fa-file-medical"></i> H700全自动生化分析仪
+    </div>
+    <div class="directory-item" data-file="analyzer-i400">
+        <i class="fas fa-file-medical"></i> I400急诊生化分析仪
+    </div>
+    <div class="directory-item" data-file="analyzer-j500">
+        <i class="fas fa-file-medical"></i> J500全自动生化分析仪
+    </div>
+    <div class="directory-item" data-file="analyzer-k900">
+        <i class="fas fa-file-medical"></i> K900高速生化分析仪
+    </div>
+    <div class="directory-item" data-file="analyzer-l350">
+        <i class="fas fa-file-medical"></i> L350全自动生化分析仪
+    </div>
+    <div class="directory-item" data-file="analyzer-m750">
+        <i class="fas fa-file-medical"></i> M750模块化生化系统
+    </div>
+    <div class="directory-item" data-file="analyzer-n250">
+        <i class="fas fa-file-medical"></i> N250便携式生化仪
+    </div>
+    <div class="directory-item" data-file="analyzer-o600">
+        <i class="fas fa-file-medical"></i> O600全自动生化分析仪
+    </div>
+    <div class="directory-item" data-file="analyzer-p800">
+        <i class="fas fa-file-medical"></i> P800高速生化分析仪
+    </div>
+    <div class="directory-item" data-file="analyzer-q450">
+        <i class="fas fa-file-medical"></i> Q450全自动生化分析仪
+    </div>
+    <div class="directory-item" data-file="analyzer-r550">
+        <i class="fas fa-file-medical"></i> R550急诊生化分析仪
+    </div>
+    <div class="directory-item" data-file="analyzer-s950">
+        <i class="fas fa-file-medical"></i> S950高速生化分析仪
+    </div>
+    <div class="directory-item" data-file="analyzer-t300">
+        <i class="fas fa-file-medical"></i> T300全自动生化分析仪
+    </div>
+</div>
+  </div>
             
             <div class="directory-group">
                 <div class="directory-title">
                     <span><i class="fas fa-tint"></i> 血液分析仪</span>
                     <i class="fas fa-chevron-right"></i>
                 </div>
-                <div class="directory-items">
-                    <div class="directory-item" data-file="DH71">
-                        <i class="fas fa-file-medical"></i> DH71CRP五分类血球仪
-                    </div>
-                    <div class="directory-item" data-file="hematology-x1">
-                        <i class="fas fa-file-medical"></i> X1五分类血球仪
-                    </div>
-                    <div class="directory-item" data-file="hematology-x3">
-                        <i class="fas fa-file-medical"></i> X3全自动血凝仪
-                    </div>
-                </div>
+            <div class="directory-items">
+    <div class="directory-item" data-file="DH71">
+        <i class="fas fa-file-medical"></i> DH71CRP五分类血球仪
+    </div>
+    <div class="directory-item" data-file="hematology-x1">
+        <i class="fas fa-file-medical"></i> X1五分类血球仪
+    </div>
+    <div class="directory-item" data-file="hematology-x3">
+        <i class="fas fa-file-medical"></i> X3全自动血凝仪
+    </div>
+    <div class="directory-item" data-file="hematology-bc5000">
+        <i class="fas fa-file-medical"></i> BC5000全自动血细胞分析仪
+    </div>
+    <div class="directory-item" data-file="hematology-ca660">
+        <i class="fas fa-file-medical"></i> CA660全自动血凝仪
+    </div>
+    <div class="directory-item" data-file="hematology-xn1000">
+        <i class="fas fa-file-medical"></i> XN1000血液分析仪
+    </div>
+    <div class="directory-item" data-file="hematology-bc3000">
+        <i class="fas fa-file-medical"></i> BC3000全自动血细胞分析仪
+    </div>
+    <div class="directory-item" data-file="hematology-cs5100">
+        <i class="fas fa-file-medical"></i> CS5100全自动血凝仪
+    </div>
+    <div class="directory-item" data-file="hematology-poc100">
+        <i class="fas fa-file-medical"></i> POC100便携式血球仪
+    </div>
+    <div class="directory-item" data-file="hematology-xn2000">
+        <i class="fas fa-file-medical"></i> XN2000血液分析仪
+    </div>
+    <div class="directory-item" data-file="hematology-bc2000">
+        <i class="fas fa-file-medical"></i> BC2000全自动血细胞分析仪
+    </div>
+    <div class="directory-item" data-file="hematology-ca1500">
+        <i class="fas fa-file-medical"></i> CA1500全自动血凝仪
+    </div>
+    <div class="directory-item" data-file="hematology-xn3000">
+        <i class="fas fa-file-medical"></i> XN3000血液分析仪
+    </div>
+    <div class="directory-item" data-file="hematology-bc6000">
+        <i class="fas fa-file-medical"></i> BC6000全自动血细胞分析仪
+    </div>
+    <div class="directory-item" data-file="hematology-cs2000">
+        <i class="fas fa-file-medical"></i> CS2000全自动血凝仪
+    </div>
+    <div class="directory-item" data-file="hematology-poc200">
+        <i class="fas fa-file-medical"></i> POC200便携式血球仪
+    </div>
+    <div class="directory-item" data-file="hematology-xn4000">
+        <i class="fas fa-file-medical"></i> XN4000血液分析仪
+    </div>
+    <div class="directory-item" data-file="hematology-bc4000">
+        <i class="fas fa-file-medical"></i> BC4000全自动血细胞分析仪
+    </div>
+    <div class="directory-item" data-file="hematology-ca500">
+        <i class="fas fa-file-medical"></i> CA500全自动血凝仪
+    </div>
+    <div class="directory-item" data-file="hematology-xn5000">
+        <i class="fas fa-file-medical"></i> XN5000血液分析仪
+    </div>
+</div>
             </div>
             
             <div class="directory-group">
@@ -811,13 +942,67 @@
                     <i class="fas fa-chevron-right"></i>
                 </div>
                 <div class="directory-items">
-                    <div class="directory-item" data-file="immuno-e100">
-                        <i class="fas fa-file-medical"></i> E100化学发光仪
-                    </div>
-                    <div class="directory-item" data-file="immuno-e200">
-                        <i class="fas fa-file-medical"></i> E200全自动免疫分析仪
-                    </div>
-                </div>
+    <div class="directory-item" data-file="immuno-e100">
+        <i class="fas fa-file-medical"></i> E100化学发光仪
+    </div>
+    <div class="directory-item" data-file="immuno-e200">
+        <i class="fas fa-file-medical"></i> E200全自动免疫分析仪
+    </div>
+    <div class="directory-item" data-file="immuno-cl2000i">
+        <i class="fas fa-file-medical"></i> CL2000i化学发光仪
+    </div>
+    <div class="directory-item" data-file="immuno-cobas8000">
+        <i class="fas fa-file-medical"></i> cobas 8000免疫分析仪
+    </div>
+    <div class="directory-item" data-file="immuno-uni2000">
+        <i class="fas fa-file-medical"></i> UNI2000全自动免疫分析仪
+    </div>
+    <div class="directory-item" data-file="immuno-architect8000">
+        <i class="fas fa-file-medical"></i> Architect i8000免疫分析仪
+    </div>
+    <div class="directory-item" data-file="immuno-advia2400">
+        <i class="fas fa-file-medical"></i> ADVIA 2400免疫分析仪
+    </div>
+    <div class="directory-item" data-file="immuno-access2">
+        <i class="fas fa-file-medical"></i> Access 2免疫分析仪
+    </div>
+    <div class="directory-item" data-file="immuno-lumipulse1200">
+        <i class="fas fa-file-medical"></i> Lumipulse G1200免疫分析仪
+    </div>
+    <div class="directory-item" data-file="immuno-immulite2000">
+        <i class="fas fa-file-medical"></i> Immulite 2000免疫分析仪
+    </div>
+    <div class="directory-item" data-file="immuno-vidas3">
+        <i class="fas fa-file-medical"></i> VIDAS 3免疫分析仪
+    </div>
+    <div class="directory-item" data-file="immuno-ai6000">
+        <i class="fas fa-file-medical"></i> AI6000化学发光仪
+    </div>
+    <div class="directory-item" data-file="immuno-cobas6000">
+        <i class="fas fa-file-medical"></i> cobas 6000免疫分析仪
+    </div>
+    <div class="directory-item" data-file="immuno-adviaxpt">
+        <i class="fas fa-file-medical"></i> ADVIA XPT免疫分析仪
+    </div>
+    <div class="directory-item" data-file="immuno-access3">
+        <i class="fas fa-file-medical"></i> Access 3免疫分析仪
+    </div>
+    <div class="directory-item" data-file="immuno-liaisonxl">
+        <i class="fas fa-file-medical"></i> LIAISON XL免疫分析仪
+    </div>
+    <div class="directory-item" data-file="immuno-architect4000">
+        <i class="fas fa-file-medical"></i> Architect i4000免疫分析仪
+    </div>
+    <div class="directory-item" data-file="immuno-immulite1000">
+        <i class="fas fa-file-medical"></i> Immulite 1000免疫分析仪
+    </div>
+    <div class="directory-item" data-file="immuno-cobas4000">
+        <i class="fas fa-file-medical"></i> cobas 4000免疫分析仪
+    </div>
+    <div class="directory-item" data-file="immuno-advia1800">
+        <i class="fas fa-file-medical"></i> ADVIA 1800免疫分析仪
+    </div>
+</div>
             </div>
             
             <div class="directory-group">
@@ -825,11 +1010,68 @@
                     <span><i class="fas fa-bacterium"></i> 微生物仪</span>
                     <i class="fas fa-chevron-right"></i>
                 </div>
-                <div class="directory-items">
-                    <div class="directory-item" data-file="BT120">
-                        <i class="fas fa-file-medical"></i>全自动血培养系统 BT120
-                    </div>
-                </div>
+           <div class="directory-items">
+    <div class="directory-item" data-file="BT120">
+        <i class="fas fa-file-medical"></i> 全自动血培养系统 BT120
+    </div>
+    <div class="directory-item" data-file="micro-bact90">
+        <i class="fas fa-file-medical"></i> BACT/90全自动血培养系统
+    </div>
+    <div class="directory-item" data-file="micro-vitek2">
+        <i class="fas fa-file-medical"></i> VITEK 2全自动微生物鉴定系统
+    </div>
+    <div class="directory-item" data-file="micro-bd960">
+        <i class="fas fa-file-medical"></i> BD BACTEC 960全自动血培养系统
+    </div>
+    <div class="directory-item" data-file="micro-walkaway">
+        <i class="fas fa-file-medical"></i> WalkAway全自动微生物鉴定系统
+    </div>
+    <div class="directory-item" data-file="micro-bactecfx">
+        <i class="fas fa-file-medical"></i> BACTEC FX全自动血培养系统
+    </div>
+    <div class="directory-item" data-file="micro-phoenix100">
+        <i class="fas fa-file-medical"></i> Phoenix 100全自动微生物鉴定系统
+    </div>
+    <div class="directory-item" data-file="micro-bactalert3d">
+        <i class="fas fa-file-medical"></i> BacT/ALERT 3D全自动血培养系统
+    </div>
+    <div class="directory-item" data-file="micro-sensititre">
+        <i class="fas fa-file-medical"></i> Sensititre全自动药敏系统
+    </div>
+    <div class="directory-item" data-file="micro-vitekm">
+        <i class="fas fa-file-medical"></i> VITEK MS微生物质谱鉴定系统
+    </div>
+    <div class="directory-item" data-file="micro-bruker">
+        <i class="fas fa-file-medical"></i> Bruker微生物质谱鉴定系统
+    </div>
+    <div class="directory-item" data-file="micro-bdmax">
+        <i class="fas fa-file-medical"></i> BD MAX全自动分子诊断系统
+    </div>
+    <div class="directory-item" data-file="micro-filmarray">
+        <i class="fas fa-file-medical"></i> FilmArray多重PCR检测系统
+    </div>
+    <div class="directory-item" data-file="micro-genexpert">
+        <i class="fas fa-file-medical"></i> GeneXpert全自动分子诊断系统
+    </div>
+    <div class="directory-item" data-file="micro-verigene">
+        <i class="fas fa-file-medical"></i> Verigene全自动分子诊断系统
+    </div>
+    <div class="directory-item" data-file="micro-unyvero">
+        <i class="fas fa-file-medical"></i> Unyvero全自动分子诊断系统
+    </div>
+    <div class="directory-item" data-file="micro-biofire">
+        <i class="fas fa-file-medical"></i> BioFire FilmArray多重PCR检测系统
+    </div>
+    <div class="directory-item" data-file="micro-aries">
+        <i class="fas fa-file-medical"></i> Aries全自动分子诊断系统
+    </div>
+    <div class="directory-item" data-file="micro-microscan">
+        <i class="fas fa-file-medical"></i> MicroScan微生物鉴定系统
+    </div>
+    <div class="directory-item" data-file="micro-bactec9240">
+        <i class="fas fa-file-medical"></i> BACTEC 9240全自动血培养系统
+    </div>
+</div>
             </div>
             
             <!-- 下载中心目录 -->
@@ -1177,12 +1419,36 @@
         const sidebarOverlay = document.querySelector('.sidebar-overlay');
         const contentArea = document.querySelector('.content-area');
 
-        // 目录展开/折叠功能
-        document.querySelectorAll('.directory-title').forEach(title => {
-            title.addEventListener('click', () => {
-                title.classList.toggle('active');
-            });
+  // 目录展开/折叠功能
+document.querySelectorAll('.directory-title').forEach(title => {
+    title.addEventListener('click', function() {
+        const wasActive = this.classList.contains('active');
+        
+        // 关闭所有其他目录
+        document.querySelectorAll('.directory-title').forEach(otherTitle => {
+            if (otherTitle !== this) {
+                otherTitle.classList.remove('active');
+            }
         });
+        
+        // 切换当前目录状态
+        this.classList.toggle('active');
+        
+        // 如果当前目录被激活，确保其内容可见
+        if (!wasActive) {
+            setTimeout(() => {
+                const activeItem = this.nextElementSibling.querySelector('.directory-item.active');
+                if (activeItem) {
+                    activeItem.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'nearest',
+                        inline: 'nearest'
+                    });
+                }
+            }, 300); // 等待展开动画完成
+        }
+    });
+});
         
         // 文件选择功能
         document.querySelectorAll('.directory-item').forEach(item => {
